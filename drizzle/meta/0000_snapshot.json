@@ -1,0 +1,105 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "cacebcc2-42ba-4ac4-bdf6-8f390f6f98c6",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "categories": {
+      "name": "categories",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "categories_name_not_empty": {
+          "name": "categories_name_not_empty",
+          "value": "length(trim(\"categories\".\"name\")) >= 1"
+        }
+      }
+    },
+    "products": {
+      "name": "products",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "category_name": {
+          "name": "category_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "products_category_name_categories_name_fk": {
+          "name": "products_category_name_categories_name_fk",
+          "tableFrom": "products",
+          "tableTo": "categories",
+          "columnsFrom": ["category_name"],
+          "columnsTo": ["name"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "products_id_not_empty": {
+          "name": "products_id_not_empty",
+          "value": "length(trim(\"products\".\"id\")) >= 1"
+        },
+        "products_name_not_empty": {
+          "name": "products_name_not_empty",
+          "value": "length(trim(\"products\".\"name\")) >= 1"
+        },
+        "products_category_name_not_empty": {
+          "name": "products_category_name_not_empty",
+          "value": "length(trim(\"products\".\"category_name\")) >= 1"
+        },
+        "products_price_non_negative": {
+          "name": "products_price_non_negative",
+          "value": "\"products\".\"price\" >= 0"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

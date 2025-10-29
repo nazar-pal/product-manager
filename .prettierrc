@@ -1,0 +1,12 @@
+{
+  "semi": false,
+  "singleQuote": true,
+
+  "arrowParens": "avoid",
+  "trailingComma": "none",
+
+  "useTabs": false,
+  "tabWidth": 2,
+
+  "tailwindFunctions": ["cn", "clsx", "twMerge"]
+}
