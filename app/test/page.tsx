@@ -61,13 +61,13 @@ export default function Home() {
     <div className="flex min-h-screen items-start justify-center bg-zinc-50 font-sans p-6 dark:bg-black">
       <main className="flex w-full max-w-5xl flex-col gap-8 py-6">
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-          API & Hooks Test Console
+          Консоль тестування API та хуків
         </h1>
 
         {/* Categories Panel */}
         <section className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="mb-3 text-xl font-medium text-zinc-900 dark:text-zinc-50">
-            Categories
+            Категорії
           </h2>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -75,18 +75,18 @@ export default function Home() {
             <div>
               <div className="mb-2 flex items-center justify-between">
                 <h3 className="font-medium text-zinc-800 dark:text-zinc-100">
-                  All Categories
+                  Усі категорії
                 </h3>
                 <button
                   className="rounded bg-zinc-800 px-3 py-1 text-sm text-white dark:bg-zinc-700"
                   onClick={() => categoriesQ.refetch()}
                 >
-                  Refresh
+                  Оновити
                 </button>
               </div>
               {categoriesQ.isLoading ? (
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Loading…
+                  Завантаження…
                 </p>
               ) : categoriesQ.isError ? (
                 <p className="text-sm text-red-600">
@@ -120,7 +120,7 @@ export default function Home() {
               >
                 <input
                   className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="New category name"
+                  placeholder="Нова назва категорії"
                   value={newCategoryName}
                   onChange={e => setNewCategoryName(e.target.value)}
                 />
@@ -128,7 +128,7 @@ export default function Home() {
                   className="rounded bg-blue-600 px-3 py-2 text-sm text-white disabled:opacity-50"
                   disabled={createCategoryM.isPending}
                 >
-                  Create
+                  Створити
                 </button>
               </form>
               {createCategoryM.isError && (
@@ -154,13 +154,13 @@ export default function Home() {
               >
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="Current name"
+                  placeholder="Поточна назва"
                   value={updateCategoryName}
                   onChange={e => setUpdateCategoryName(e.target.value)}
                 />
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="New name (optional)"
+                  placeholder="Нова назва (необов'язково)"
                   value={updateCategoryNewName}
                   onChange={e => setUpdateCategoryNewName(e.target.value)}
                 />
@@ -168,7 +168,7 @@ export default function Home() {
                   className="col-span-2 rounded bg-amber-600 px-3 py-2 text-sm text-white disabled:opacity-50"
                   disabled={updateCategoryM.isPending}
                 >
-                  Update
+                  Оновити
                 </button>
               </form>
               {updateCategoryM.isError && (
@@ -189,7 +189,7 @@ export default function Home() {
               >
                 <input
                   className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="Delete category name"
+                  placeholder="Назва категорії для видалення"
                   value={deleteCategoryName}
                   onChange={e => setDeleteCategoryName(e.target.value)}
                 />
@@ -197,7 +197,7 @@ export default function Home() {
                   className="rounded bg-red-600 px-3 py-2 text-sm text-white disabled:opacity-50"
                   disabled={deleteCategoryM.isPending}
                 >
-                  Delete
+                  Видалити
                 </button>
               </form>
               {deleteCategoryM.isError && (
@@ -211,12 +211,12 @@ export default function Home() {
           {/* Category Detail Tester */}
           <div className="mt-6 border-t border-zinc-200 pt-4 dark:border-zinc-800">
             <h3 className="mb-2 font-medium text-zinc-800 dark:text-zinc-100">
-              Category Detail
+              Деталі категорії
             </h3>
             <div className="flex items-center gap-2">
               <input
                 className="w-64 rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                placeholder="Category name"
+                placeholder="Назва категорії"
                 value={categoryDetailName}
                 onChange={e => setCategoryDetailName(e.target.value)}
               />
@@ -225,12 +225,14 @@ export default function Home() {
                 onClick={() => categoryDetailQ.refetch()}
                 disabled={!categoryDetailName.trim()}
               >
-                Fetch
+                Отримати
               </button>
             </div>
             <div className="mt-2 text-sm">
               {categoryDetailQ.isFetching && (
-                <p className="text-zinc-600 dark:text-zinc-400">Loading…</p>
+                <p className="text-zinc-600 dark:text-zinc-400">
+                  Завантаження…
+                </p>
               )}
               {categoryDetailQ.isError && (
                 <p className="text-red-600">
@@ -249,7 +251,7 @@ export default function Home() {
         {/* Products Panel */}
         <section className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="mb-3 text-xl font-medium text-zinc-900 dark:text-zinc-50">
-            Products
+            Товари
           </h2>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -257,18 +259,18 @@ export default function Home() {
             <div>
               <div className="mb-2 flex items-center justify-between">
                 <h3 className="font-medium text-zinc-800 dark:text-zinc-100">
-                  All Products
+                  Усі товари
                 </h3>
                 <button
                   className="rounded bg-zinc-800 px-3 py-1 text-sm text-white dark:bg-zinc-700"
                   onClick={() => productsQ.refetch()}
                 >
-                  Refresh
+                  Оновити
                 </button>
               </div>
               {productsQ.isLoading ? (
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Loading…
+                  Завантаження…
                 </p>
               ) : productsQ.isError ? (
                 <p className="text-sm text-red-600">
@@ -283,13 +285,13 @@ export default function Home() {
                     >
                       <div className="font-medium">{p.name}</div>
                       <div className="text-zinc-600 dark:text-zinc-400">
-                        id: {p.id}
+                        ідентифікатор: {p.id}
                       </div>
                       <div className="text-zinc-600 dark:text-zinc-400">
-                        price: {p.price}
+                        ціна: {p.price}
                       </div>
                       <div className="text-zinc-600 dark:text-zinc-400">
-                        category: {p.categoryName}
+                        категорія: {p.categoryName}
                       </div>
                     </li>
                   ))}
@@ -326,19 +328,19 @@ export default function Home() {
               >
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="Product name"
+                  placeholder="Назва товару"
                   value={newProductName}
                   onChange={e => setNewProductName(e.target.value)}
                 />
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="Price (int)"
+                  placeholder="Ціна (ціле число)"
                   value={newProductPrice}
                   onChange={e => setNewProductPrice(e.target.value)}
                 />
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="Category name"
+                  placeholder="Назва категорії"
                   value={newProductCategory}
                   onChange={e => setNewProductCategory(e.target.value)}
                 />
@@ -346,7 +348,7 @@ export default function Home() {
                   className="col-span-3 rounded bg-blue-600 px-3 py-2 text-sm text-white disabled:opacity-50"
                   disabled={createProductM.isPending}
                 >
-                  Create
+                  Створити
                 </button>
               </form>
               {createProductM.isError && (
@@ -385,25 +387,25 @@ export default function Home() {
               >
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="Product id"
+                  placeholder="ID товару"
                   value={updateProductId}
                   onChange={e => setUpdateProductId(e.target.value)}
                 />
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="New name (optional)"
+                  placeholder="Нова назва (необов'язково)"
                   value={updateProductName}
                   onChange={e => setUpdateProductName(e.target.value)}
                 />
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="New price (optional)"
+                  placeholder="Нова ціна (необов'язково)"
                   value={updateProductPrice}
                   onChange={e => setUpdateProductPrice(e.target.value)}
                 />
                 <input
                   className="rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="New category (optional)"
+                  placeholder="Нова категорія (необов'язково)"
                   value={updateProductCategory}
                   onChange={e => setUpdateProductCategory(e.target.value)}
                 />
@@ -411,7 +413,7 @@ export default function Home() {
                   className="col-span-4 rounded bg-amber-600 px-3 py-2 text-sm text-white disabled:opacity-50"
                   disabled={updateProductM.isPending}
                 >
-                  Update
+                  Оновити
                 </button>
               </form>
               {updateProductM.isError && (
@@ -432,7 +434,7 @@ export default function Home() {
               >
                 <input
                   className="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                  placeholder="Delete product id"
+                  placeholder="ID товару для видалення"
                   value={deleteProductId}
                   onChange={e => setDeleteProductId(e.target.value)}
                 />
@@ -440,7 +442,7 @@ export default function Home() {
                   className="rounded bg-red-600 px-3 py-2 text-sm text-white disabled:opacity-50"
                   disabled={deleteProductM.isPending}
                 >
-                  Delete
+                  Видалити
                 </button>
               </form>
               {deleteProductM.isError && (
@@ -454,12 +456,12 @@ export default function Home() {
           {/* Product Detail Tester */}
           <div className="mt-6 border-t border-zinc-200 pt-4 dark:border-zinc-800">
             <h3 className="mb-2 font-medium text-zinc-800 dark:text-zinc-100">
-              Product Detail
+              Деталі товару
             </h3>
             <div className="flex items-center gap-2">
               <input
                 className="w-64 rounded border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-                placeholder="Product id"
+                placeholder="ID товару"
                 value={productDetailId}
                 onChange={e => setProductDetailId(e.target.value)}
               />
@@ -468,12 +470,14 @@ export default function Home() {
                 onClick={() => productDetailQ.refetch()}
                 disabled={!productDetailId.trim()}
               >
-                Fetch
+                Отримати
               </button>
             </div>
             <div className="mt-2 text-sm">
               {productDetailQ.isFetching && (
-                <p className="text-zinc-600 dark:text-zinc-400">Loading…</p>
+                <p className="text-zinc-600 dark:text-zinc-400">
+                  Завантаження…
+                </p>
               )}
               {productDetailQ.isError && (
                 <p className="text-red-600">
