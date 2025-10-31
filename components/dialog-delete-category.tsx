@@ -26,7 +26,11 @@ export function DialogDeleteCategory({
 }) {
   const { mutate: deleteCategory, isPending } = useDeleteCategoryMutation()
   const [open, setOpen] = useState(false)
-  const { data: products } = useProductsQuery()
+  const {
+    data: products,
+    isLoading: areProductsLoading,
+    error: productsError
+  } = useProductsQuery()
   const affectedCount =
     products?.filter(p => p.categoryName === category.name).length ?? 0
 
@@ -44,14 +48,25 @@ export function DialogDeleteCategory({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent aria-busy={isPending}>
         <AlertDialogHeader>
           <AlertDialogTitle>Ви впевнені?</AlertDialogTitle>
           <AlertDialogDescription>
             Цю дію не можна скасувати. Категорію &quot;{category.name}&quot;
             буде остаточно видалено з бази даних. Усі повʼязані товари також
-            буде видалено (усього: {affectedCount}).
+            буде видалено (усього:{' '}
+            {areProductsLoading
+              ? '…'
+              : productsError
+                ? 'невідомо'
+                : affectedCount}
+            ).
           </AlertDialogDescription>
+          {productsError && (
+            <AlertDialogDescription className="text-destructive">
+              Не вдалося отримати список товарів: {productsError.message}
+            </AlertDialogDescription>
+          )}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Скасувати</AlertDialogCancel>

@@ -43,10 +43,13 @@ export function DialogFormCategory({
   children: ReactNode
   category?: Category
 }) {
-  const { mutate: createCategory } = useCreateCategoryMutation()
-  const { mutate: updateCategory } = useUpdateCategoryMutation()
+  const { mutate: createCategory, isPending: isCreating } =
+    useCreateCategoryMutation()
+  const { mutate: updateCategory, isPending: isUpdating } =
+    useUpdateCategoryMutation()
   const [open, setOpen] = useState(false)
   const isEdit = Boolean(category)
+  const isSubmitting = isCreating || isUpdating
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,7 +65,8 @@ export function DialogFormCategory({
             form.reset()
             toast.success('Категорію успішно оновлено')
             setOpen(false)
-          }
+          },
+          onError: err => toast.error(err.message)
         }
       )
     } else {
@@ -71,7 +75,8 @@ export function DialogFormCategory({
           form.reset()
           toast.success('Категорію успішно додано')
           setOpen(false)
-        }
+        },
+        onError: err => toast.error(err.message)
       })
     }
   }
@@ -79,7 +84,11 @@ export function DialogFormCategory({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        aria-busy={isSubmitting}
+        showCloseButton={!isSubmitting}
+      >
         <DialogHeader>
           <DialogTitle>
             {isEdit ? 'Оновити категорію' : 'Додати категорію'}
@@ -107,6 +116,7 @@ export function DialogFormCategory({
                       aria-invalid={fieldState.invalid}
                       placeholder="Введіть назву категорії"
                       autoComplete="off"
+                      disabled={isSubmitting}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -127,11 +137,12 @@ export function DialogFormCategory({
                 form.reset()
                 if (isEdit) setOpen(false)
               }}
+              disabled={isSubmitting}
             >
               {isEdit ? 'Скасувати' : 'Скинути'}
             </Button>
-            <Button type="submit" form="form-category">
-              {isEdit ? 'Оновити' : 'Додати'}
+            <Button type="submit" form="form-category" disabled={isSubmitting}>
+              {isSubmitting ? 'Збереження…' : isEdit ? 'Оновити' : 'Додати'}
             </Button>
           </Field>
         </DialogFooter>

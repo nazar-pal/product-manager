@@ -60,11 +60,18 @@ export function DialogFormProduct({
   children: ReactNode
   product?: Product
 }) {
-  const { data: categories } = useCategoriesQuery()
-  const { mutate: createProduct } = useCreateProductMutation()
-  const { mutate: updateProduct } = useUpdateProductMutation()
+  const {
+    data: categories,
+    isLoading: areCategoriesLoading,
+    error: categoriesError
+  } = useCategoriesQuery()
+  const { mutate: createProduct, isPending: isCreating } =
+    useCreateProductMutation()
+  const { mutate: updateProduct, isPending: isUpdating } =
+    useUpdateProductMutation()
   const [open, setOpen] = useState(false)
   const isEdit = Boolean(product)
+  const isSubmitting = isCreating || isUpdating
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,7 +83,6 @@ export function DialogFormProduct({
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data)
     if (product) {
       updateProduct(
         { id: product.id, ...data },
@@ -85,7 +91,8 @@ export function DialogFormProduct({
             form.reset()
             toast.success('Товар успішно оновлено')
             setOpen(false)
-          }
+          },
+          onError: err => toast.error(err.message)
         }
       )
     } else {
@@ -94,7 +101,8 @@ export function DialogFormProduct({
           form.reset()
           toast.success('Товар успішно додано')
           setOpen(false)
-        }
+        },
+        onError: err => toast.error(err.message)
       })
     }
   }
@@ -102,7 +110,11 @@ export function DialogFormProduct({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        aria-busy={isSubmitting}
+        showCloseButton={!isSubmitting}
+      >
         <DialogHeader>
           <DialogTitle>{isEdit ? 'Оновити товар' : 'Додати товар'}</DialogTitle>
           <DialogDescription>
@@ -128,6 +140,7 @@ export function DialogFormProduct({
                       aria-invalid={fieldState.invalid}
                       placeholder="Введіть назву товару"
                       autoComplete="off"
+                      disabled={isSubmitting}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -150,6 +163,7 @@ export function DialogFormProduct({
                       aria-invalid={fieldState.invalid}
                       placeholder="0"
                       autoComplete="off"
+                      disabled={isSubmitting}
                       value={
                         field.value === undefined || field.value === null
                           ? ''
@@ -184,6 +198,11 @@ export function DialogFormProduct({
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
+                      {categoriesError && (
+                        <FieldError
+                          errors={[{ message: categoriesError.message }]}
+                        />
+                      )}
                     </FieldContent>
                     <Select
                       name={field.name}
@@ -194,8 +213,21 @@ export function DialogFormProduct({
                         id="form-product-category"
                         aria-invalid={fieldState.invalid}
                         className="min-w-[120px]"
+                        disabled={
+                          areCategoriesLoading ||
+                          !!categoriesError ||
+                          isSubmitting
+                        }
                       >
-                        <SelectValue placeholder="Виберіть категорію" />
+                        <SelectValue
+                          placeholder={
+                            areCategoriesLoading
+                              ? 'Завантаження…'
+                              : categoriesError
+                                ? 'Недоступно'
+                                : 'Виберіть категорію'
+                          }
+                        />
                       </SelectTrigger>
                       <SelectContent position="item-aligned">
                         {categories?.map(category => (
@@ -221,11 +253,18 @@ export function DialogFormProduct({
                 form.reset()
                 if (isEdit) setOpen(false)
               }}
+              disabled={isSubmitting}
             >
               {isEdit ? 'Скасувати' : 'Скинути'}
             </Button>
-            <Button type="submit" form="form-product">
-              {isEdit ? 'Оновити' : 'Додати'}
+            <Button
+              type="submit"
+              form="form-product"
+              disabled={
+                isSubmitting || areCategoriesLoading || Boolean(categoriesError)
+              }
+            >
+              {isSubmitting ? 'Збереження…' : isEdit ? 'Оновити' : 'Додати'}
             </Button>
           </Field>
         </DialogFooter>
