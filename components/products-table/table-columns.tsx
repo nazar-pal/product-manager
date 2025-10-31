@@ -2,20 +2,14 @@
 'use no memo'
 
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import { Product } from '@/db/schema'
 import { ColumnDef } from '@tanstack/react-table'
-import { EllipsisVertical, Pencil, Trash } from 'lucide-react'
+import { Pencil, Trash } from 'lucide-react'
 import { DialogDeleteProduct } from '../dialog-delete-product'
 import { DialogFormProduct } from '../dialog-form-product'
-import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { DataTableColumnHeader } from './data-table-column-header'
+import { TableHeaderActions } from './table-header-actions'
 
 export const tableColumns: ColumnDef<Product>[] = [
   {
@@ -79,34 +73,9 @@ export const tableColumns: ColumnDef<Product>[] = [
   {
     id: 'actions',
     header: ({ table }) => {
-      const selectedRows = table.getFilteredSelectedRowModel().rows.length
       return (
         <div className="text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative"
-                disabled={!selectedRows}
-              >
-                <EllipsisVertical
-                  className={
-                    'size-4 rotate-90' + (selectedRows ? '' : ' opacity-50')
-                  }
-                />
-                {Boolean(selectedRows) && (
-                  <Badge className="absolute top-0 right-0 p-0 m-0 size-4">
-                    {selectedRows}
-                  </Badge>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>Змінити категорію</DropdownMenuItem>
-              <DropdownMenuItem>Видалити товар</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TableHeaderActions table={table} />
         </div>
       )
     },
