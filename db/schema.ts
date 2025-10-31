@@ -19,7 +19,10 @@ export const products = sqliteTable(
     price: integer('price').notNull(),
     categoryName: text('category_name')
       .notNull()
-      .references(() => categories.name, { onDelete: 'cascade' })
+      .references(() => categories.name, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
+      })
   },
   table => [
     check('products_id_not_empty', sql`length(trim(${table.id})) >= 1`),

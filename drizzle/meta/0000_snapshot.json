@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "cacebcc2-42ba-4ac4-bdf6-8f390f6f98c6",
+  "id": "b1e3f518-b49c-4e99-a8ec-21fee9a6daef",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "categories": {
@@ -64,10 +64,14 @@
           "name": "products_category_name_categories_name_fk",
           "tableFrom": "products",
           "tableTo": "categories",
-          "columnsFrom": ["category_name"],
-          "columnsTo": ["name"],
+          "columnsFrom": [
+            "category_name"
+          ],
+          "columnsTo": [
+            "name"
+          ],
           "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},

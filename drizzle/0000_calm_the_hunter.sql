@@ -8,7 +8,7 @@ CREATE TABLE `products` (
 	`name` text NOT NULL,
 	`price` integer NOT NULL,
 	`category_name` text NOT NULL,
-	FOREIGN KEY (`category_name`) REFERENCES `categories`(`name`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`category_name`) REFERENCES `categories`(`name`) ON UPDATE cascade ON DELETE cascade,
 	CONSTRAINT "products_id_not_empty" CHECK(length(trim("products"."id")) >= 1),
 	CONSTRAINT "products_name_not_empty" CHECK(length(trim("products"."name")) >= 1),
 	CONSTRAINT "products_category_name_not_empty" CHECK(length(trim("products"."category_name")) >= 1),
