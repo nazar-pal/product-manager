@@ -10,11 +10,18 @@ import {
 import { Product } from '@/db/schema'
 import { Table } from '@tanstack/react-table'
 import { EllipsisVertical } from 'lucide-react'
+import { useState } from 'react'
+import { DialogBulkDeleteProducts } from '../dialog-bulk-delete-products'
+import { DialogBulkUpdateCategory } from '../dialog-bulk-update-category'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 
 export function TableHeaderActions({ table }: { table: Table<Product> }) {
-  const selectedRows = table.getFilteredSelectedRowModel().rows.length
+  const [openBulkDelete, setOpenBulkDelete] = useState(false)
+  const [openBulkUpdate, setOpenBulkUpdate] = useState(false)
+  const selectedRowModel = table.getFilteredSelectedRowModel()
+  const selectedRows = selectedRowModel.rows.length
+  const selectedIds = selectedRowModel.rows.map(r => r.original.id)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,9 +42,39 @@ export function TableHeaderActions({ table }: { table: Table<Product> }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>Змінити категорію</DropdownMenuItem>
-        <DropdownMenuItem>Видалити товар</DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={() => {
+            setOpenBulkUpdate(true)
+          }}
+        >
+          Змінити категорію
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="text-destructive focus:text-destructive"
+          onSelect={() => {
+            setOpenBulkDelete(true)
+          }}
+        >
+          Видалити товар
+        </DropdownMenuItem>
       </DropdownMenuContent>
+      <DialogBulkUpdateCategory
+        open={openBulkUpdate}
+        onOpenChange={setOpenBulkUpdate}
+        productIds={selectedIds}
+        onSuccess={() => {
+          table.setRowSelection({})
+        }}
+      />
+      <DialogBulkDeleteProducts
+        open={openBulkDelete}
+        onOpenChange={setOpenBulkDelete}
+        productIds={selectedIds}
+        count={selectedRows}
+        onSuccess={() => {
+          table.setRowSelection({})
+        }}
+      />
     </DropdownMenu>
   )
 }

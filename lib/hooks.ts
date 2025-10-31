@@ -4,12 +4,14 @@ import {
   createProduct,
   deleteCategory,
   deleteProduct,
+  deleteProducts,
   fetchCategories,
   fetchProducts,
   getCategory,
   getProduct,
   updateCategory,
-  updateProduct
+  updateProduct,
+  updateProductsCategory
 } from './api'
 
 const QUERY_KEYS = {
@@ -55,7 +57,11 @@ export const useCreateCategoryMutation = () => {
 
   return useMutation({
     mutationFn: (name: string) => createCategory(name),
-    onSuccess: () => qc.invalidateQueries({ queryKey: QUERY_KEYS.categories })
+    onSuccess: () =>
+      qc.invalidateQueries({
+        queryKey: QUERY_KEYS.categories,
+        exact: true
+      })
   })
 }
 
@@ -65,7 +71,40 @@ export const useUpdateCategoryMutation = () => {
   return useMutation({
     mutationFn: (params: { name: string; newName?: string }) =>
       updateCategory(params),
-    onSuccess: () => qc.invalidateQueries({ queryKey: QUERY_KEYS.categories })
+    onSuccess: async (_updated, variables) => {
+      const invalidations = [
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.categories,
+          exact: true
+        }),
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.products,
+          exact: true
+        }),
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.category(variables.name),
+          exact: true
+        })
+      ]
+      if (variables?.newName) {
+        invalidations.push(
+          qc.invalidateQueries({
+            queryKey: QUERY_KEYS.category(variables.newName),
+            exact: true
+          })
+        )
+      }
+      // Category rename cascades to products; ensure product details become stale
+      invalidations.push(
+        qc.invalidateQueries({
+          predicate: q =>
+            Array.isArray(q.queryKey) &&
+            q.queryKey.length === 2 &&
+            q.queryKey[0] === QUERY_KEYS.products[0]
+        })
+      )
+      await Promise.all(invalidations)
+    }
   })
 }
 
@@ -74,10 +113,27 @@ export const useDeleteCategoryMutation = () => {
 
   return useMutation({
     mutationFn: (name: string) => deleteCategory(name),
-    onSuccess: async () => {
+    onSuccess: async (_data, name) => {
       await Promise.all([
-        qc.invalidateQueries({ queryKey: QUERY_KEYS.categories }),
-        qc.invalidateQueries({ queryKey: QUERY_KEYS.products })
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.categories,
+          exact: true
+        }),
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.products,
+          exact: true
+        }),
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.category(name),
+          exact: true
+        }),
+        // Deleting a category cascades to products; invalidate product details
+        qc.invalidateQueries({
+          predicate: q =>
+            Array.isArray(q.queryKey) &&
+            q.queryKey.length === 2 &&
+            q.queryKey[0] === QUERY_KEYS.products[0]
+        })
       ])
     }
   })
@@ -92,7 +148,11 @@ export const useCreateProductMutation = () => {
       price: number
       categoryName: string
     }) => createProduct(product),
-    onSuccess: () => qc.invalidateQueries({ queryKey: QUERY_KEYS.products })
+    onSuccess: () =>
+      qc.invalidateQueries({
+        queryKey: QUERY_KEYS.products,
+        exact: true
+      })
   })
 }
 
@@ -106,7 +166,18 @@ export const useUpdateProductMutation = () => {
       price?: number
       categoryName?: string
     }) => updateProduct(params),
-    onSuccess: () => qc.invalidateQueries({ queryKey: QUERY_KEYS.products })
+    onSuccess: async (_updated, variables) => {
+      await Promise.all([
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.products,
+          exact: true
+        }),
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.product(variables.id),
+          exact: true
+        })
+      ])
+    }
   })
 }
 
@@ -115,8 +186,64 @@ export const useDeleteProductMutation = () => {
 
   return useMutation({
     mutationFn: (id: string) => deleteProduct(id),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.products })
+    onSuccess: async (_data, id) => {
+      await Promise.all([
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.products,
+          exact: true
+        }),
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.product(id),
+          exact: true
+        })
+      ])
+    }
+  })
+}
+
+export const useBulkDeleteProductsMutation = () => {
+  const qc = useQueryClient()
+
+  return useMutation({
+    mutationFn: (ids: string[]) => deleteProducts(ids),
+    onSuccess: async (_data, ids) => {
+      const invalidations = [
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.products,
+          exact: true
+        }),
+        ...ids.map(id =>
+          qc.invalidateQueries({
+            queryKey: QUERY_KEYS.product(id),
+            exact: true
+          })
+        )
+      ]
+      await Promise.all(invalidations)
+    }
+  })
+}
+
+export const useBulkUpdateProductsCategoryMutation = () => {
+  const qc = useQueryClient()
+
+  return useMutation({
+    mutationFn: (params: { ids: string[]; categoryName: string }) =>
+      updateProductsCategory(params),
+    onSuccess: async (_data, { ids }) => {
+      const invalidations = [
+        qc.invalidateQueries({
+          queryKey: QUERY_KEYS.products,
+          exact: true
+        }),
+        ...ids.map(id =>
+          qc.invalidateQueries({
+            queryKey: QUERY_KEYS.product(id),
+            exact: true
+          })
+        )
+      ]
+      await Promise.all(invalidations)
     }
   })
 }

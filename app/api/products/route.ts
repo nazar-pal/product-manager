@@ -1,7 +1,13 @@
 import { db } from '@/db'
 import { products } from '@/db/schema'
-import { ensureJsonRequest, parseJsonBody, sqliteToHttpError } from '@/lib/http'
+import {
+  ensureJsonRequest,
+  isUuidLike,
+  parseJsonBody,
+  sqliteToHttpError
+} from '@/lib/http'
 import { tryCatch } from '@/lib/try-catch'
+import { inArray } from 'drizzle-orm'
 import { createInsertSchema } from 'drizzle-zod'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -67,4 +73,82 @@ export async function POST(req: NextRequest) {
       Location: `/api/products/${encodeURIComponent(inserted.id)}`
     }
   })
+}
+
+export async function PATCH(req: NextRequest) {
+  const contentTypeError = ensureJsonRequest(req)
+  if (contentTypeError) return contentTypeError
+
+  const [jsonErr, body] = await parseJsonBody(req)
+  if (jsonErr) return jsonErr
+  console.log('PATCH products route', body)
+
+  const BulkUpdateSchema = z.object({
+    ids: z
+      .array(z.string().trim().refine(isUuidLike, 'Invalid product id'))
+      .min(1),
+    categoryName: z.string().trim().min(1)
+  })
+
+  const parsed = BulkUpdateSchema.safeParse(body)
+  if (!parsed.success)
+    return NextResponse.json({ error: parsed.error.message }, { status: 422 })
+
+  const { ids, categoryName } = parsed.data as {
+    ids: string[]
+    categoryName: string
+  }
+
+  const [dbError, runResult] = tryCatch(() =>
+    db
+      .update(products)
+      .set({ categoryName })
+      .where(inArray(products.id, ids))
+      .run()
+  )
+
+  if (dbError) {
+    const message = (dbError as unknown as { message?: string })?.message || ''
+    if (message.includes('FOREIGN KEY constraint failed'))
+      return NextResponse.json(
+        { error: 'categoryName does not exist' },
+        { status: 422 }
+      )
+    if (message.includes('CHECK constraint failed'))
+      return NextResponse.json(
+        { error: 'Validation failed for product update' },
+        { status: 422 }
+      )
+    return sqliteToHttpError(dbError, 'Failed to update products')
+  }
+
+  return NextResponse.json({ updated: runResult.changes ?? 0 })
+}
+
+export async function DELETE(req: NextRequest) {
+  const contentTypeError = ensureJsonRequest(req)
+  if (contentTypeError) return contentTypeError
+
+  const [jsonErr, body] = await parseJsonBody(req)
+  if (jsonErr) return jsonErr
+
+  const BulkDeleteSchema = z.object({
+    ids: z
+      .array(z.string().trim().refine(isUuidLike, 'Invalid product id'))
+      .min(1)
+  })
+
+  const parsed = BulkDeleteSchema.safeParse(body)
+  if (!parsed.success)
+    return NextResponse.json({ error: parsed.error.message }, { status: 422 })
+
+  const { ids } = parsed.data as { ids: string[] }
+
+  const [dbError] = tryCatch(() =>
+    db.delete(products).where(inArray(products.id, ids)).run()
+  )
+
+  if (dbError) return sqliteToHttpError(dbError, 'Failed to delete products')
+
+  return new NextResponse(null, { status: 204 })
 }

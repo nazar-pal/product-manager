@@ -163,3 +163,35 @@ export const getProduct = async (
   })
   return parseJsonOrThrow<Product>(res)
 }
+
+export const deleteProducts = async (
+  ids: string[],
+  options?: RequestOpts
+): Promise<void> => {
+  const res = await fetch('/api/products', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    },
+    body: JSON.stringify({ ids }),
+    signal: options?.signal
+  })
+  await throwIfNotOk(res)
+}
+
+export const updateProductsCategory = async (
+  params: { ids: string[]; categoryName: string },
+  options?: RequestOpts
+): Promise<{ updated: number }> => {
+  const res = await fetch('/api/products', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    },
+    body: JSON.stringify(params),
+    signal: options?.signal
+  })
+  return parseJsonOrThrow<{ updated: number }>(res)
+}
