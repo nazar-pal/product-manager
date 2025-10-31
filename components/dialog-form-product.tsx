@@ -88,7 +88,6 @@ export function DialogFormProduct({
         { id: product.id, ...data },
         {
           onSuccess: () => {
-            form.reset()
             toast.success('Товар успішно оновлено')
             setOpen(false)
           },
@@ -108,7 +107,18 @@ export function DialogFormProduct({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={nextOpen => {
+        setOpen(nextOpen)
+        if (nextOpen)
+          form.reset({
+            name: product?.name ?? '',
+            price: product?.price ?? 0,
+            categoryName: product?.categoryName ?? ''
+          })
+      }}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         className="sm:max-w-[425px]"
@@ -250,8 +260,8 @@ export function DialogFormProduct({
               type="button"
               variant={isEdit ? 'outline' : 'secondary'}
               onClick={() => {
-                form.reset()
                 if (isEdit) setOpen(false)
+                else form.reset()
               }}
               disabled={isSubmitting}
             >

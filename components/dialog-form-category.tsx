@@ -62,7 +62,6 @@ export function DialogFormCategory({
         { name: category.name, newName: data.name },
         {
           onSuccess: () => {
-            form.reset()
             toast.success('Категорію успішно оновлено')
             setOpen(false)
           },
@@ -82,7 +81,13 @@ export function DialogFormCategory({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={nextOpen => {
+        setOpen(nextOpen)
+        if (nextOpen) form.reset({ name: category?.name ?? '' })
+      }}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         className="sm:max-w-[425px]"
@@ -134,8 +139,8 @@ export function DialogFormCategory({
               type="button"
               variant={isEdit ? 'outline' : 'secondary'}
               onClick={() => {
-                form.reset()
                 if (isEdit) setOpen(false)
+                else form.reset()
               }}
               disabled={isSubmitting}
             >
