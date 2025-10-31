@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Product } from '@/db/schema'
 import { ColumnDef } from '@tanstack/react-table'
 import { EllipsisVertical, Pencil, Trash } from 'lucide-react'
 import { DialogDeleteProduct } from '../dialog-delete-product'
@@ -16,16 +17,7 @@ import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 import { DataTableColumnHeader } from './data-table-column-header'
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Product = {
-  id: string
-  name: string
-  price: number
-  categoryName: string
-}
-
-export const columns: ColumnDef<Product>[] = [
+export const tableColumns: ColumnDef<Product>[] = [
   {
     id: 'select',
     header: ({ table }) => (
