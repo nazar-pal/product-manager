@@ -38,14 +38,16 @@ export const tableColumns: ColumnDef<Product>[] = [
       />
     ),
     enableSorting: false,
-    enableHiding: false
+    enableHiding: false,
+    size: 50
   },
   {
     accessorKey: 'name',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Товар" />
     ),
-    sortingFn: 'text'
+    sortingFn: 'text',
+    size: 250
   },
   {
     accessorKey: 'price',
@@ -61,7 +63,8 @@ export const tableColumns: ColumnDef<Product>[] = [
 
       return <div className="font-medium">{formatted}</div>
     },
-    sortingFn: 'alphanumeric'
+    sortingFn: 'alphanumeric',
+    size: 150
   },
   {
     accessorKey: 'categoryName',
@@ -70,7 +73,8 @@ export const tableColumns: ColumnDef<Product>[] = [
     ),
     filterFn: (row, id, value) =>
       (value as string[]).includes(row.getValue(id)),
-    sortingFn: 'text'
+    sortingFn: 'text',
+    size: 150
   },
   {
     id: 'actions',
@@ -124,6 +128,7 @@ export const tableColumns: ColumnDef<Product>[] = [
           </DialogDeleteProduct>
         </div>
       )
-    }
+    },
+    size: 80
   }
 ]

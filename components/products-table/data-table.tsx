@@ -102,13 +102,14 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="overflow-hidden rounded-md border">
-        <Table>
+        <Table className="table-fixed">
           <TableHeader className="bg-muted sticky top-0 z-10">
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map(header => {
+                  const width = header.getSize()
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} style={{ width }}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -128,14 +129,17 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map(cell => {
+                    const width = cell.column.getSize()
+                    return (
+                      <TableCell key={cell.id} style={{ width }}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
               ))
             ) : (
