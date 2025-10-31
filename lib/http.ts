@@ -30,10 +30,7 @@ export function validateIdParam(
       { status: 400 }
     )
 
-  const uuidLike =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      trimmed
-    )
+  const uuidLike = isUuidLike(trimmed)
   if (!uuidLike)
     return NextResponse.json(
       { error: `Invalid ${resourceLabel} id format` },

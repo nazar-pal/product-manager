@@ -23,5 +23,3 @@ export function CategoryCard({ category }: { category: Category }) {
     </div>
   )
 }
-
-

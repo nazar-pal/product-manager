@@ -64,12 +64,8 @@
           "name": "products_category_name_categories_name_fk",
           "tableFrom": "products",
           "tableTo": "categories",
-          "columnsFrom": [
-            "category_name"
-          ],
-          "columnsTo": [
-            "name"
-          ],
+          "columnsFrom": ["category_name"],
+          "columnsTo": ["name"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }

@@ -44,7 +44,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '../ui/select'
-import { DataTableFacetedFilter } from './data-table-faceted-filter'
+import { DataTableFacetedFilter } from './table-faceted-filter'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

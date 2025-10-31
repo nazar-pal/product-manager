@@ -8,7 +8,7 @@ import { Pencil, Trash } from 'lucide-react'
 import { DialogDeleteProduct } from '../dialog-delete-product'
 import { DialogFormProduct } from '../dialog-form-product'
 import { Button } from '../ui/button'
-import { DataTableColumnHeader } from './data-table-column-header'
+import { DataTableColumnHeader } from './table-column-header'
 import { TableHeaderActions } from './table-header-actions'
 
 export const tableColumns: ColumnDef<Product>[] = [
