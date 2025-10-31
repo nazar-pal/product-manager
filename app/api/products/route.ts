@@ -81,7 +81,6 @@ export async function PATCH(req: NextRequest) {
 
   const [jsonErr, body] = await parseJsonBody(req)
   if (jsonErr) return jsonErr
-  console.log('PATCH products route', body)
 
   const BulkUpdateSchema = z.object({
     ids: z
