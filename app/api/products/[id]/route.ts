@@ -4,7 +4,7 @@ import {
   ensureJsonRequest,
   parseJsonBody,
   sqliteToHttpError,
-  validateUuidParam
+  validateIdParam
 } from '@/lib/http'
 import { tryCatch } from '@/lib/try-catch'
 import { eq } from 'drizzle-orm'
@@ -17,7 +17,7 @@ type ReqContext = RouteContext<'/api/products/[id]'>
 export async function GET(_req: NextRequest, ctx: ReqContext) {
   const params = await ctx.params
 
-  const idError = validateUuidParam(params.id, 'product')
+  const idError = validateIdParam(params.id, 'product')
   if (idError) return idError
 
   const [dbError, row] = tryCatch(() =>
@@ -35,7 +35,7 @@ export async function GET(_req: NextRequest, ctx: ReqContext) {
 export async function PATCH(req: NextRequest, ctx: ReqContext) {
   const params = await ctx.params
 
-  const idError = validateUuidParam(params.id, 'product')
+  const idError = validateIdParam(params.id, 'product')
   if (idError) return idError
 
   const contentTypeError = ensureJsonRequest(req)
@@ -97,7 +97,7 @@ export async function PATCH(req: NextRequest, ctx: ReqContext) {
 export async function DELETE(_req: NextRequest, ctx: ReqContext) {
   const params = await ctx.params
 
-  const idError = validateUuidParam(params.id, 'product')
+  const idError = validateIdParam(params.id, 'product')
   if (idError) return idError
 
   const [dbError, runResult] = tryCatch(() =>

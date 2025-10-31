@@ -6,26 +6,6 @@ export function isUuidV4(value: string): boolean {
   )
 }
 
-export function validateUuidParam(
-  id: string,
-  resourceLabel: string
-): NextResponse | null {
-  const trimmed = id.trim()
-  if (trimmed.length === 0)
-    return NextResponse.json(
-      { error: `Invalid ${resourceLabel} id` },
-      { status: 400 }
-    )
-
-  if (!isUuidV4(trimmed))
-    return NextResponse.json(
-      { error: `Invalid ${resourceLabel} id format` },
-      { status: 400 }
-    )
-
-  return null
-}
-
 export function validateNameParam(
   name: string,
   resourceLabel: string
@@ -36,6 +16,30 @@ export function validateNameParam(
       { error: `Invalid ${resourceLabel} name` },
       { status: 400 }
     )
+  return null
+}
+
+export function validateIdParam(
+  id: string,
+  resourceLabel: string
+): NextResponse | null {
+  const trimmed = id.trim()
+  if (trimmed.length === 0)
+    return NextResponse.json(
+      { error: `Invalid ${resourceLabel} id` },
+      { status: 400 }
+    )
+
+  const uuidLike =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      trimmed
+    )
+  if (!uuidLike)
+    return NextResponse.json(
+      { error: `Invalid ${resourceLabel} id format` },
+      { status: 400 }
+    )
+
   return null
 }
 
