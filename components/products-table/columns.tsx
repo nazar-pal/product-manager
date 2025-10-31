@@ -1,28 +1,7 @@
 'use client'
 'use no memo'
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,10 +10,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ColumnDef } from '@tanstack/react-table'
 import { EllipsisVertical, Pencil, Trash } from 'lucide-react'
+import { DialogDeleteProduct } from '../dialog-delete-product'
+import { DialogFormProduct } from '../dialog-form-product'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
 import { DataTableColumnHeader } from './data-table-column-header'
 
 // This type is used to define the shape of our data.
@@ -140,66 +119,17 @@ export const columns: ColumnDef<Product>[] = [
 
       return (
         <div className="flex items-center gap-2 justify-end">
-          <Dialog>
-            <form>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Pencil className="size-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Редагувати товар</DialogTitle>
-                  <DialogDescription>Змініть дані товару.</DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4">
-                  <div className="grid gap-3">
-                    <Label htmlFor="name-1">Назва</Label>
-                    <Input
-                      id="name-1"
-                      name="name"
-                      defaultValue={product.name}
-                    />
-                  </div>
-                  <div className="grid gap-3">
-                    <Label htmlFor="username-1">Ціна</Label>
-                    <Input
-                      id="username-1"
-                      name="price"
-                      defaultValue={product.price}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button variant="outline">Скасувати</Button>
-                  </DialogClose>
-                  <Button type="submit">Зберегти зміни</Button>
-                </DialogFooter>
-              </DialogContent>
-            </form>
-          </Dialog>
+          <DialogFormProduct product={product}>
+            <Button variant="ghost" size="icon">
+              <Pencil className="size-4" />
+            </Button>
+          </DialogFormProduct>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Trash className="size-4" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Ви впевнені?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Цю дію не можна скасувати. Товар буде остаточно видалено з
-                  бази даних.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Скасувати</AlertDialogCancel>
-                <AlertDialogAction>Продовжити</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <DialogDeleteProduct product={product}>
+            <Button variant="ghost" size="icon">
+              <Trash className="size-4" />
+            </Button>
+          </DialogDeleteProduct>
         </div>
       )
     }

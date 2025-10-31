@@ -19,7 +19,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
-  ChevronsRight
+  ChevronsRight,
+  Plus
 } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
@@ -33,6 +34,7 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { useState } from 'react'
+import { DialogFormProduct } from '../dialog-form-product'
 import { Button } from '../ui/button'
 import { Label } from '../ui/label'
 import {
@@ -90,7 +92,14 @@ export function DataTable<TData, TValue>({
           showSearchFilter={true}
         />
 
-        <Button className="ml-auto">+ Додати товар</Button>
+        <div className="ml-auto">
+          <DialogFormProduct>
+            <Button>
+              <Plus className="size-4" />
+              Додати товар
+            </Button>
+          </DialogFormProduct>
+        </div>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>

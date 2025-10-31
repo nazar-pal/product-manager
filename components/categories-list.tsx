@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { useCategoriesQuery } from '@/lib/hooks'
 import { ChevronLeft, ChevronRight, Pencil, Plus, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { DialogDeleteCategory } from './dialog-delete-category'
+import { DialogFormCategory } from './dialog-form-category'
 
 export function CategoriesList() {
   const { data: categories } = useCategoriesQuery()
@@ -46,10 +48,13 @@ export function CategoriesList() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground">Категорії</h3>
-        <Button size="sm">
-          <Plus className="mr-2 h-4 w-4" />
-          Додати категорію
-        </Button>
+
+        <DialogFormCategory>
+          <Button className="ml-auto">
+            <Plus className="size-4" />
+            Додати категорію
+          </Button>
+        </DialogFormCategory>
       </div>
 
       <div className="relative group/scroll">
@@ -104,12 +109,16 @@ export function CategoriesList() {
                   {category.name}
                 </span>
                 <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                  <Button variant="ghost" size="icon" className="h-7 w-7">
-                    <Pencil className="h-3.5 w-3.5" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-7 w-7">
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
+                  <DialogFormCategory category={category}>
+                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
+                  </DialogFormCategory>
+                  <DialogDeleteCategory category={category}>
+                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </DialogDeleteCategory>
                 </div>
               </div>
             ))
